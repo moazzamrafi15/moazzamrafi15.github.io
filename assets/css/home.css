@@ -222,3 +222,11 @@
         padding: 20px;
       }
     }
+    .about-photo {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 1.5rem;
+    }
