@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Moazzam Rafi">
-  <meta name="description" content="Learn how to design reliable APIs using idempotency, retries, timeouts, and consistent error handling.">
+  <meta name="description" content="A practical guide to reliable API design, covering idempotency, bounded retries, timeouts, consistent errors, and failure testing.">
   <meta name="robots" content="index, follow">
   <title>Designing Reliable APIs: Idempotency, Retries, and Error Handling | Moazzam Rafi</title>
 
@@ -220,9 +220,12 @@
 
     <p>
       Reliable API design is not simply about returning a successful
-      HTTP response. It is about defining predictable behavior
-      during failures, preventing unintended duplicate operations,
-      and making recovery understandable for clients.
+      HTTP response. It means defining predictable behavior when the
+      outcome is uncertain, preventing unintended duplicate operations,
+      and giving clients a safe way to recover. These details become
+      especially important in distributed systems, where a client,
+      API, and downstream dependency can observe different parts of
+      the same failure.
     </p>
 
     <p>
@@ -255,8 +258,13 @@
       <div class="step">Response is lost due to a network failure</div>
       <div class="arrow">↓</div>
       <div class="step">Client cannot determine the outcome and retries</div>
+      <div class="arrow">↓</div>
+      <div class="step">Server checks the idempotency key</div>
+      <div class="arrow">↓</div>
+      <div class="step">Existing job is recognized; no duplicate job is created</div>
       <p class="caption">
         A failed response does not necessarily mean the operation failed.
+        The retry should resolve the original operation, not start a second one.
       </p>
     </div>
 
@@ -316,6 +324,14 @@ Idempotency-Key: doc-process-8f31
       incomplete operations, and recovery after a crash.
     </div>
 
+    <p>
+      Scope keys to the appropriate caller or tenant so unrelated
+      clients cannot collide. Retain keys for at least the documented
+      retry and recovery window, and define what happens after that
+      window expires. If a key expires too early, a late retry may be
+      treated as a new operation and create another job.
+    </p>
+
     <h2>3. Design retries carefully</h2>
 
     <p>
@@ -336,7 +352,10 @@ Idempotency-Key: doc-process-8f31
       <li><strong>Idempotency:</strong> use it when retrying operations that may change state.</li>
     </ul>
 
-    <p>For example, a client might use this illustrative schedule:</p>
+    <p>
+      For example, a client might start with the following illustrative
+      backoff delays before applying jitter:
+    </p>
 
     <pre><code>Attempt 1: immediately
 Attempt 2: after about 200 ms
