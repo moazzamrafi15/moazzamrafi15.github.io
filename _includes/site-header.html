@@ -1,0 +1,12 @@
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="brand" href="/">Moazzam Rafi</a>
+    <div class="nav-links">
+      <a href="/" {% if page.url == "/" %}aria-current="page"{% endif %}>Home</a>
+      <a href="/articles/" {% if page.url contains "/articles" %}aria-current="page"{% endif %}>Articles</a>
+      <a href="/ai-learning-lab/" {% if page.url contains "/ai-learning-lab" %}aria-current="page"{% endif %}>AI Systems Engineering</a>
+      <a href="https://www.linkedin.com/in/moazzam-rafi-a598a059/"
+         target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </nav>
+</header>

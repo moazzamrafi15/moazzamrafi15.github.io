@@ -1,215 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="Moazzam Rafi">
-  <meta name="description" content="A practical guide to reliable API design, covering idempotency, bounded retries, timeouts, consistent errors, and failure testing.">
-  <meta name="robots" content="index, follow">
-  <title>Designing Reliable APIs: Idempotency, Retries, and Error Handling | Moazzam Rafi</title>
-
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --text: #172033;
-      --muted: #64748b;
-      --accent: #2563eb;
-      --border: #e2e8f0;
-      --code: #111827;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.8;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover { text-decoration: underline; }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-
-    nav {
-      max-width: 1000px;
-      margin: auto;
-      padding: 18px 24px;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand {
-      color: var(--text);
-      font-weight: 750;
-    }
-
-    main {
-      max-width: 800px;
-      margin: auto;
-      padding: 52px 24px 72px;
-    }
-
-    .eyebrow {
-      color: var(--accent);
-      font-size: .8rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      font-size: clamp(2.1rem, 5vw, 3.4rem);
-      line-height: 1.18;
-      letter-spacing: -.04em;
-      margin: 14px 0;
-    }
-
-    h2 {
-      margin-top: 42px;
-      font-size: 1.7rem;
-      line-height: 1.35;
-      letter-spacing: -.025em;
-    }
-
-    h3 { margin-top: 28px; }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 1.15rem;
-    }
-
-    .meta {
-      color: var(--muted);
-      font-size: .9rem;
-      margin: 20px 0 32px;
-    }
-
-    .callout {
-      background: #eff6ff;
-      border-left: 4px solid var(--accent);
-      padding: 16px 20px;
-      margin: 24px 0;
-      border-radius: 0 8px 8px 0;
-    }
-
-    pre {
-      overflow-x: auto;
-      padding: 20px;
-      background: var(--code);
-      color: #f9fafb;
-      border-radius: 10px;
-      font-size: .88rem;
-      line-height: 1.65;
-    }
-
-    code {
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    }
-
-    p code, li code {
-      background: #eaf0f8;
-      padding: 2px 5px;
-      border-radius: 4px;
-      color: #172033;
-    }
-
-    .diagram {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px;
-      margin: 24px 0;
-      text-align: center;
-    }
-
-    .step {
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 12px;
-      margin: 8px auto;
-      max-width: 360px;
-      background: #fff;
-    }
-
-    .arrow {
-      color: var(--accent);
-      font-weight: 800;
-      line-height: 1.3;
-    }
-
-    .caption {
-      color: var(--muted);
-      font-size: .88rem;
-      margin-top: 14px;
-    }
-
-    .takeaways {
-      padding: 22px 26px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .author-box {
-      margin-top: 48px;
-      padding: 24px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--surface);
-    }
-
-    footer {
-      max-width: 800px;
-      margin: auto;
-      padding: 24px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    @media (max-width: 560px) {
-      main { padding-top: 36px; }
-      pre { font-size: .8rem; }
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <nav>
-      <a class="brand" href="/">Moazzam Rafi</a>
-      <a href="/articles/">All articles</a>
-    </nav>
-  </header>
-
-  <main>
-    <div class="eyebrow">API Engineering · Reliability</div>
-
-    <h1>Designing Reliable APIs: Idempotency, Retries, and Error Handling</h1>
-
-    <p class="subtitle">
+---
+layout: default
+title: 'Designing Reliable APIs: Idempotency, Retries, and Error Handling | Moazzam Rafi'
+description: 'A practical guide to reliable API design, covering idempotency, bounded retries, timeouts, consistent errors, and failure testing.'
+permalink: /articles/reliable-apis/
+main_class: article-main
+body_class: reliable-apis
+page_css: /assets/css/reliable-apis.css
+---
+<div class="eyebrow">API Engineering · Reliability</div>
+<h1>Designing Reliable APIs: Idempotency, Retries, and Error Handling</h1>
+<p class="subtitle">
       Practical patterns for building APIs that behave predictably
       when clients retry requests, networks fail, or dependencies
       become temporarily unavailable.
     </p>
-
-    <div class="meta">
+<div class="meta">
       By Moazzam Rafi · Technical article · 8-minute read
     </div>
-
-    <p>
+<p>
       An API can work perfectly under normal conditions and still
       fail users when something unexpected happens. A network
       connection may drop after a server has processed a request.
@@ -217,8 +25,7 @@
       retry because it cannot tell whether the original operation
       succeeded.
     </p>
-
-    <p>
+<p>
       Reliable API design is not simply about returning a successful
       HTTP response. It means defining predictable behavior when the
       outcome is uncertain, preventing unintended duplicate operations,
@@ -227,173 +34,146 @@
       API, and downstream dependency can observe different parts of
       the same failure.
     </p>
-
-    <p>
+<p>
       Three useful building blocks are <strong>idempotency</strong>,
       <strong>controlled retries</strong>, and
       <strong>consistent error handling</strong>.
     </p>
-
-    <h2>1. Understand the uncertain outcome problem</h2>
-
-    <p>
+<h2>1. Understand the uncertain outcome problem</h2>
+<p>
       Imagine a document-processing service that accepts a request
       to analyze an uploaded document. The server successfully creates
       a processing job, but the network connection drops before the
       response reaches the client.
     </p>
-
-    <p>
+<p>
       From the client's perspective, the result is unknown. If it
       sends the request again, the service might create a second
       processing job for the same logical request unless it can
       recognize the repeated operation.
     </p>
-
-    <div class="diagram">
-      <div class="step">Client submits a document-processing request</div>
-      <div class="arrow">↓</div>
-      <div class="step">Server successfully creates a processing job</div>
-      <div class="arrow">↓</div>
-      <div class="step">Response is lost due to a network failure</div>
-      <div class="arrow">↓</div>
-      <div class="step">Client cannot determine the outcome and retries</div>
-      <div class="arrow">↓</div>
-      <div class="step">Server checks the idempotency key</div>
-      <div class="arrow">↓</div>
-      <div class="step">Existing job is recognized; no duplicate job is created</div>
-      <p class="caption">
+<div class="diagram">
+<div class="step">Client submits a document-processing request</div>
+<div class="arrow">↓</div>
+<div class="step">Server successfully creates a processing job</div>
+<div class="arrow">↓</div>
+<div class="step">Response is lost due to a network failure</div>
+<div class="arrow">↓</div>
+<div class="step">Client cannot determine the outcome and retries</div>
+<div class="arrow">↓</div>
+<div class="step">Server checks the idempotency key</div>
+<div class="arrow">↓</div>
+<div class="step">Existing job is recognized; no duplicate job is created</div>
+<p class="caption">
         A failed response does not necessarily mean the operation failed.
         The retry should resolve the original operation, not start a second one.
       </p>
-    </div>
-
-    <p>
+</div>
+<p>
       This distinction matters for operations that create resources
       or trigger background work. Without safeguards, duplicate
       requests can consume extra computing resources or produce
       multiple results for one logical operation.
     </p>
-
-    <h2>2. Use idempotency to prevent duplicate operations</h2>
-
-    <p>
+<h2>2. Use idempotency to prevent duplicate operations</h2>
+<p>
       An operation is idempotent when repeating it with the same
       intended input produces the same intended effect as performing
       it once. HTTP defines idempotent methods, and application APIs
       can also implement idempotency for operations such as creating
       a document-processing job.
     </p>
-
-    <p>
+<p>
       One common approach is an idempotency key. The client creates
       a unique key for one logical operation and reuses that key
       when retrying the same operation.
     </p>
-
-    <pre><code>POST /v1/documents/process
+<pre><code>POST /v1/documents/process
 Idempotency-Key: doc-process-8f31
 
 {
   "documentId": "doc-204",
   "analysisType": "text-extraction"
 }</code></pre>
-
-    <p>
+<p>
       The server uses the key to identify repeated requests. A
       typical implementation stores the key, a request fingerprint,
       the operation status, and the result associated with that key.
     </p>
-
-    <h3>A typical processing flow</h3>
-
-    <ol>
-      <li>Receive the request and validate its inputs.</li>
-      <li>Look up the idempotency key within the appropriate client or tenant scope.</li>
-      <li>If the key is new, safely register the operation and initiate processing.</li>
-      <li>If the same key and same request were already completed, return the saved result or the documented status for that operation.</li>
-      <li>If the same key is reused with different input, reject the conflicting request.</li>
-      <li>If the original operation is still running, return a documented in-progress response or follow a defined waiting policy.</li>
-    </ol>
-
-    <div class="callout">
-      <strong>Important:</strong> Checking for a key and recording
+<h3>A typical processing flow</h3>
+<ol>
+<li>Receive the request and validate its inputs.</li>
+<li>Look up the idempotency key within the appropriate client or tenant scope.</li>
+<li>If the key is new, safely register the operation and initiate processing.</li>
+<li>If the same key and same request were already completed, return the saved result or the documented status for that operation.</li>
+<li>If the same key is reused with different input, reject the conflicting request.</li>
+<li>If the original operation is still running, return a documented in-progress response or follow a defined waiting policy.</li>
+</ol>
+<div class="callout">
+<strong>Important:</strong> Checking for a key and recording
       it must be concurrency-safe. Otherwise, two simultaneous
       requests may both pass the check and create separate jobs.
       The design also needs a clear policy for key expiration,
       incomplete operations, and recovery after a crash.
     </div>
-
-    <p>
+<p>
       Scope keys to the appropriate caller or tenant so unrelated
       clients cannot collide. Retain keys for at least the documented
       retry and recovery window, and define what happens after that
       window expires. If a key expires too early, a late retry may be
       treated as a new operation and create another job.
     </p>
-
-    <h2>3. Design retries carefully</h2>
-
-    <p>
+<h2>3. Design retries carefully</h2>
+<p>
       Retrying can help recover from temporary failures, but
       uncontrolled retries can amplify an outage. If many clients
       repeatedly call an overloaded dependency, they can increase
       its load precisely when it is least able to handle it.
     </p>
-
-    <p>A resilient retry policy should define:</p>
-
-    <ul>
-      <li><strong>Retryable failures:</strong> distinguish temporary network errors, timeouts, and selected server errors from permanent validation or authorization failures.</li>
-      <li><strong>Attempt limits:</strong> set a maximum number of attempts.</li>
-      <li><strong>Exponential backoff:</strong> increase the delay between attempts.</li>
-      <li><strong>Jitter:</strong> add randomness to avoid many clients retrying at the same time.</li>
-      <li><strong>Deadlines:</strong> stop retrying when the request's overall time budget has expired.</li>
-      <li><strong>Idempotency:</strong> use it when retrying operations that may change state.</li>
-    </ul>
-
-    <p>
+<p>A resilient retry policy should define:</p>
+<ul>
+<li><strong>Retryable failures:</strong> distinguish temporary network errors, timeouts, and selected server errors from permanent validation or authorization failures.</li>
+<li><strong>Attempt limits:</strong> set a maximum number of attempts.</li>
+<li><strong>Exponential backoff:</strong> increase the delay between attempts.</li>
+<li><strong>Jitter:</strong> add randomness to avoid many clients retrying at the same time.</li>
+<li><strong>Deadlines:</strong> stop retrying when the request's overall time budget has expired.</li>
+<li><strong>Idempotency:</strong> use it when retrying operations that may change state.</li>
+</ul>
+<p>
       For example, a client might start with the following illustrative
       backoff delays before applying jitter:
     </p>
-
-    <pre><code>Attempt 1: immediately
+<pre><code>Attempt 1: immediately
 Attempt 2: after about 200 ms
 Attempt 3: after about 400 ms
 Attempt 4: after about 800 ms</code></pre>
-
-    <p>
+<p>
       These are example delays, not universal defaults. Production
       policies should account for service latency, retry budgets,
       server-provided guidance such as <code>Retry-After</code>,
       and the impact of the operation.
     </p>
-
-    <h2>4. Make error responses predictable</h2>
-
-    <p>
+<h2>4. Make error responses predictable</h2>
+<p>
       Clients need enough information to decide whether to correct
       a request, authenticate again, wait and retry, or investigate
       an unexpected failure. Consistent error formats make that
       decision easier.
     </p>
-
-    <pre><code>{
+<pre><code>{
   "error": {
     "code": "RESOURCE_CONFLICT",
     "message": "The request conflicts with the current resource state.",
     "requestId": "req-example-123"
   }
 }</code></pre>
-
-    <p>
+<p>
       A useful error contract includes a stable machine-readable
       code, a clear message, and a request identifier for diagnostics.
       Avoid returning stack traces, secrets, internal hostnames, or
       other sensitive implementation details.
     </p>
-
-    <p>
+<p>
       Use HTTP status codes consistently. For example, a malformed
       request may return <code>400</code>, an unauthenticated request
       may return <code>401</code>, a missing resource may return
@@ -401,88 +181,68 @@ Attempt 4: after about 800 ms</code></pre>
       <code>429</code>. Choose status codes according to the API's
       documented semantics.
     </p>
-
-    <h2>5. Set timeouts and protect dependencies</h2>
-
-    <p>
+<h2>5. Set timeouts and protect dependencies</h2>
+<p>
       A request that waits indefinitely can consume connections,
       threads, memory, or other resources. Set explicit connection
       and response timeouts, and establish an end-to-end deadline
       that downstream calls respect.
     </p>
-
-    <p>
+<p>
       For systems with failing dependencies, circuit breakers,
       concurrency limits, and load shedding can help prevent
       one unhealthy component from exhausting resources across
       the wider system. These mechanisms complement retries;
       they do not replace correct operation semantics.
     </p>
-
-    <h2>6. Test failure scenarios, not only the happy path</h2>
-
-    <p>
+<h2>6. Test failure scenarios, not only the happy path</h2>
+<p>
       Reliability improves when failure behavior is part of the
       test plan. In addition to normal successful requests, test
       scenarios such as:
     </p>
-
-    <ul>
-      <li>The server accepts a request but the response is lost.</li>
-      <li>The client sends the same idempotency key concurrently.</li>
-      <li>The same key is reused with a different request body.</li>
-      <li>A dependency times out or returns a temporary error.</li>
-      <li>The service crashes after recording an operation but before completing it.</li>
-      <li>The retry limit is reached and the client must recover.</li>
-    </ul>
-
-    <p>
+<ul>
+<li>The server accepts a request but the response is lost.</li>
+<li>The client sends the same idempotency key concurrently.</li>
+<li>The same key is reused with a different request body.</li>
+<li>A dependency times out or returns a temporary error.</li>
+<li>The service crashes after recording an operation but before completing it.</li>
+<li>The retry limit is reached and the client must recover.</li>
+</ul>
+<p>
       Monitor request latency, error rates, retry volume, timeout
       rates, duplicate-request handling, and incomplete operations.
       These signals help reveal whether an API is reliable under
       real operating conditions.
     </p>
-
-    <h2>Key takeaways</h2>
-
-    <div class="takeaways">
-      <ul>
-        <li>Design for uncertain outcomes: a lost response does not prove an operation failed.</li>
-        <li>Use concurrency-safe idempotency for operations that must not be duplicated.</li>
-        <li>Apply bounded retries with backoff, jitter, and deadlines.</li>
-        <li>Keep HTTP status codes and error response formats consistent.</li>
-        <li>Use timeouts and dependency protection to contain failures.</li>
-        <li>Test retries, concurrency, and partial failures explicitly.</li>
-      </ul>
-    </div>
-
-    <p>
+<h2>Key takeaways</h2>
+<div class="takeaways">
+<ul>
+<li>Design for uncertain outcomes: a lost response does not prove an operation failed.</li>
+<li>Use concurrency-safe idempotency for operations that must not be duplicated.</li>
+<li>Apply bounded retries with backoff, jitter, and deadlines.</li>
+<li>Keep HTTP status codes and error response formats consistent.</li>
+<li>Use timeouts and dependency protection to contain failures.</li>
+<li>Test retries, concurrency, and partial failures explicitly.</li>
+</ul>
+</div>
+<p>
       Reliable APIs emerge from the interaction of these choices.
       Idempotency helps control repeated operations, retry policies
       help recover from transient failures, and clear error contracts
       let clients respond appropriately. Together, they make
       distributed systems easier to operate and safer to integrate.
     </p>
-
-    <div class="author-box">
-      <strong>About the author</strong>
-      <p>
+<div class="author-box">
+<strong>About the author</strong>
+<p>
         Moazzam Rafi writes about API engineering, distributed
         systems, and reliable software architecture. This publication
         shares independent technical explanations using general
         examples and publicly discussable engineering concepts.
       </p>
-      <a href="/articles/">← Browse all articles</a>
-      <p>
-        <a href="https://www.linkedin.com/in/moazzam-rafi-a598a059/"
-           target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
-      </p>
-    </div>
-  </main>
-
-  <footer>
-    <p>© 2026 Moazzam Rafi · Engineering Notes &amp; Insights</p>
-    <p>Independent technical writing. All opinions are my own.</p>
-  </footer>
-</body>
-</html>
+<a href="/articles/">← Browse all articles</a>
+<p>
+<a href="https://www.linkedin.com/in/moazzam-rafi-a598a059/" rel="noopener noreferrer" target="_blank">Connect on LinkedIn</a>
+</p>
+</div>
