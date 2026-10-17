@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,8 +25,7 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.8;
     }
 
@@ -117,8 +115,7 @@
     }
 
     code {
-      font-family: "SFMono-Regular", Consolas,
-        "Liberation Mono", monospace;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
     }
 
     p code, li code {
@@ -237,35 +234,37 @@
     <h2>1. Understand the uncertain outcome problem</h2>
 
     <p>
-      Imagine an online service that accepts a request to create
-      an order. The server creates the order, but the network
-      connection drops before the response reaches the client.
+      Imagine a document-processing service that accepts a request
+      to analyze an uploaded document. The server successfully creates
+      a processing job, but the network connection drops before the
+      response reaches the client.
     </p>
 
     <p>
       From the client's perspective, the result is unknown. If it
       sends the request again, the service might create a second
-      order unless it has a way to recognize the repeated operation.
+      processing job for the same logical request unless it can
+      recognize the repeated operation.
     </p>
 
     <div class="diagram">
-      <div class="step">Client sends create-order request</div>
+      <div class="step">Client submits a document-processing request</div>
       <div class="arrow">↓</div>
-      <div class="step">Server creates the order successfully</div>
+      <div class="step">Server successfully creates a processing job</div>
       <div class="arrow">↓</div>
       <div class="step">Response is lost due to a network failure</div>
       <div class="arrow">↓</div>
       <div class="step">Client cannot determine the outcome and retries</div>
       <p class="caption">
-        The key challenge: a failed response does not necessarily
-        mean the operation failed.
+        A failed response does not necessarily mean the operation failed.
       </p>
     </div>
 
     <p>
-      This distinction matters for any operation that creates or
-      changes state, including orders, payments, bookings, and
-      resource creation.
+      This distinction matters for operations that create resources
+      or trigger background work. Without safeguards, duplicate
+      requests can consume extra computing resources or produce
+      multiple results for one logical operation.
     </p>
 
     <h2>2. Use idempotency to prevent duplicate operations</h2>
@@ -273,9 +272,9 @@
     <p>
       An operation is idempotent when repeating it with the same
       intended input produces the same intended effect as performing
-      it once. HTTP defines idempotent methods, but application
-      APIs may also implement idempotency for operations such as
-      creating an order or initiating a payment.
+      it once. HTTP defines idempotent methods, and application APIs
+      can also implement idempotency for operations such as creating
+      a document-processing job.
     </p>
 
     <p>
@@ -284,12 +283,12 @@
       when retrying the same operation.
     </p>
 
-    <pre><code>POST /v1/orders
-Idempotency-Key: order-request-8f31
+    <pre><code>POST /v1/documents/process
+Idempotency-Key: doc-process-8f31
 
 {
-  "productId": "item-204",
-  "quantity": 1
+  "documentId": "doc-204",
+  "analysisType": "text-extraction"
 }</code></pre>
 
     <p>
@@ -302,9 +301,9 @@ Idempotency-Key: order-request-8f31
 
     <ol>
       <li>Receive the request and validate its inputs.</li>
-      <li>Look up the idempotency key within the correct client or account scope.</li>
-      <li>If the key is new, safely register the operation and process it.</li>
-      <li>If the same key and same request were already completed, return the saved result.</li>
+      <li>Look up the idempotency key within the appropriate client or tenant scope.</li>
+      <li>If the key is new, safely register the operation and initiate processing.</li>
+      <li>If the same key and same request were already completed, return the saved result or the documented status for that operation.</li>
       <li>If the same key is reused with different input, reject the conflicting request.</li>
       <li>If the original operation is still running, return a documented in-progress response or follow a defined waiting policy.</li>
     </ol>
@@ -312,7 +311,7 @@ Idempotency-Key: order-request-8f31
     <div class="callout">
       <strong>Important:</strong> Checking for a key and recording
       it must be concurrency-safe. Otherwise, two simultaneous
-      requests may both pass the check and perform the operation.
+      requests may both pass the check and create separate jobs.
       The design also needs a clear policy for key expiration,
       incomplete operations, and recovery after a crash.
     </div>
@@ -410,7 +409,7 @@ Attempt 4: after about 800 ms</code></pre>
     </p>
 
     <ul>
-      <li>The server succeeds but the response is lost.</li>
+      <li>The server accepts a request but the response is lost.</li>
       <li>The client sends the same idempotency key concurrently.</li>
       <li>The same key is reused with a different request body.</li>
       <li>A dependency times out or returns a temporary error.</li>
@@ -456,8 +455,8 @@ Attempt 4: after about 800 ms</code></pre>
       </p>
       <a href="/articles/">← Browse all articles</a>
       <p>
-        <a href="https://www.linkedin.com/in/moazzam-rafi-a598a059/" target="_blank"
-           rel="noopener noreferrer">Connect on LinkedIn</a>
+        <a href="https://www.linkedin.com/in/moazzam-rafi-a598a059/"
+           target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
       </p>
     </div>
   </main>
